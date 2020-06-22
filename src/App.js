@@ -1,25 +1,36 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, {useState} from 'react';
 import './App.css';
-
+import Header from './components/Header/Header';
+import Footer from './components/Footer/Footer';
+import LoginForm from './components/LoginForm/LoginForm';
+import Home from './components/Home/Home';
+import RegistrationForm from './components/RegistrationForm/RegistrationForm';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route
+} from "react-router-dom";
 function App() {
+  const [title, updateTitle] = useState(null);
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <Header title={title}/>
+          <Switch>
+            <Route path="/" exact={true}>
+              <LoginForm updateTitle={updateTitle}/>
+            </Route>
+            <Route path="/home">
+              <Home/>
+            </Route>
+            <Route path="/login">
+              <LoginForm updateTitle={updateTitle}/>
+            </Route>
+            <Route path="/register">
+              <RegistrationForm  updateTitle={updateTitle}/>
+            </Route>
+          </Switch>
+          <Footer/>
+    </Router>
   );
 }
 
