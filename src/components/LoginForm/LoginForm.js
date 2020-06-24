@@ -15,30 +15,42 @@ function LoginForm(props) {
           textAlign:"center"
 
       };
+
+      const [emailaddress, setEmail] = useState(null);
+      const [currentpassword, setPassword] = useState(null);
+      const [emailError, setEmailError] = useState(null);
+      const [passwordError, setPasswordError] = useState(null);
+      const [invalidCredentials, setInvalidCredentials] = useState(null);
+      const [setUser, setUserNull] = useState();
       
 
     useEffect(() => {
         props.updateTitle('Login');
       }, []);
     
-    const [state , setState] = useState({
-        email : "",
-        password : "",
-        successMessage: null,
-    })
-    const handleChange = (e) => {
-        const {id , value} = e.target   
-        setState(prevState => ({
-            ...prevState,
-            [id] : value
-        }))
-    }
-
     const handleSubmitClick = (e) => {
-        e.preventDefault();
-        if(state.email ==="nikhil@gmail.com" && state.password ==="password"){
-               redirectToHome();
-        }  
+        e.preventDefault(); 
+        let user = JSON.parse(localStorage.getItem('USER_INFO'));
+        if(user !== null && user !== undefined ){
+            let { email, password} = user;
+            if(emailaddress === null){
+                setEmailError('Email cannot be blank')
+            }
+            if(currentpassword === null){
+                setPasswordError('Password cannot be blank')
+            }
+            if( emailaddress !== null && emailaddress !== email && currentpassword !== null && currentpassword !== password){
+                setInvalidCredentials('Invalid Credentials');
+            }
+            if( emailaddress === email && password === currentpassword && user !== null){
+                redirectToHome();
+            }
+           
+        }
+        else{
+            setUserNull('No Records Found!!! Please Sign Up')
+        }
+
     }
     const redirectToHome = () => {
         props.updateTitle('Home')
@@ -65,19 +77,21 @@ function LoginForm(props) {
                             className="form-control" 
                             id="email"  
                             placeholder="Enter email" 
-                            value={state.email}
-                            onChange={handleChange}
+                            value={emailaddress}
+                            onChange={e => setEmail(e.target.value)}
                        />
+                       {emailError && <p className="bg-black text-danger">{emailError}</p> }
 
                            <label htmlFor="password" className ="label control-label">Password</label>
                             <input type="password" 
                             className="form-control" 
                             id="password" 
                             placeholder="password" 
-                            value={state.password}
-
-                            onChange={handleChange}
+                            value={currentpassword}
+                            onChange={e => setPassword(e.target.value)}
                        />
+                        { passwordError && <p className="bg-black text-danger">{passwordError}</p> }
+                {invalidCredentials &&  <p className="error">{invalidCredentials}</p>}
                        <input type="checkbox"/><small>Remember me ?</small>
                        <div className="row"> 
                        <div className="col-md-6">
@@ -86,6 +100,7 @@ function LoginForm(props) {
                        <div className="col-md-6 registerMessage">
                         <span>Dont have an account? </span>
                         <span className="loginText" onClick={() => redirectToRegister()}>Register</span> 
+                        {setUser && <p className="bg-black text-danger">{setUser}</p>}
                        </div>
                        </div>
                        

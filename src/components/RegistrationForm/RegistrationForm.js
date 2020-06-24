@@ -1,9 +1,12 @@
 import React, {useState} from 'react';
 import './RegistrationForm.css';
 import { withRouter } from "react-router-dom";
+import { useDispatch} from 'react-redux';
+import register  from "../../actions";
 
 function RegistrationForm(props) {
-
+    //const registrationReducer = useSelector(state => state.registrationReducer);
+    const dispatch = useDispatch();
     const rowStyle = {
         marginTop: "120px",
         boxShadow: "-1px 1px 50px 10px black"
@@ -12,22 +15,15 @@ function RegistrationForm(props) {
           borderBottom:"1px solid #f44c89",
           padding:"10px",
           textAlign:"center"
-
       };
-    const [state , setState] = useState({
-        email : "",
-        password : "",
-        confirmPassword: "",
-        successMessage: null
-    })
-    const handleChange = (e) => {
-        const {id , value} = e.target   
-        setState(prevState => ({
-            ...prevState,
-            [id] : value
-        }))
-    }
-   
+
+    const [firstname, setFirstName] = useState("");
+    const [lastname, setLastName] = useState("");
+    const [email, setEmail] = useState("");
+    const [mobile, setMobile] = useState("");
+    const [password, setPassword] = useState("");
+    const [confirmPassword, setconfirmPassword] = useState("");
+    
     const redirectToHome = () => {
         props.updateTitle('Home')
         props.history.push('/home');
@@ -38,66 +34,11 @@ function RegistrationForm(props) {
     }
     const handleSubmitClick = (e) => {
         e.preventDefault();
-        if(state.password === state.confirmPassword) {
-            redirectToHome();  
-        } else {
-            props.showError('Passwords do not match');
-        }
+        const userDetails = { firstname, lastname, email,mobile, password,  confirmPassword};
+        dispatch(register(userDetails));
+        redirectToHome(); 
     }
     return(
-        // <div className="card col-12 col-lg-12 login-card mt-2 hv-center">
-        //     <h1>Register</h1>
-        //     <form>
-        //         <div className="form-group text-left">
-        //         <label htmlFor="email">Email address</label>
-        //         <input type="email" 
-        //                className="form-control" 
-        //                id="email" 
-        //                aria-describedby="emailHelp" 
-        //                placeholder="Enter email" 
-        //                value={state.email}
-        //                onChange={handleChange}
-        //         />
-        //         <small id="emailHelp" className="form-text text-muted">We'll never share your email with anyone else.</small>
-        //         </div>
-        //         <div className="form-group text-left">
-        //             <label htmlFor="password">Password</label>
-        //             <input type="password" 
-        //                 className="form-control" 
-        //                 id="password" 
-        //                 placeholder="Password"
-        //                 value={state.password}
-        //                 onChange={handleChange} 
-        //             />
-        //         </div>
-        //         <div className="form-group text-left">
-        //             <label htmlFor="confirmPassword">Confirm Password</label>
-        //             <input type="password" 
-        //                 className="form-control" 
-        //                 id="confirmPassword" 
-        //                 placeholder="Confirm Password"
-        //                 value={state.confirmPassword}
-        //                 onChange={handleChange} 
-        //             />
-        //         </div>
-        //         <button 
-        //             type="submit" 
-        //             className="btn btn-dark"
-        //             onClick={handleSubmitClick}
-        //         >
-        //             Register
-        //         </button>
-        //     </form>
-        //     {/* <div className="alert alert-success mt-2" style={{display: state.successMessage ? 'block' : 'none' }} role="alert">
-        //         {state.successMessage}
-        //     </div> */}
-        //     <div className="mt-2">
-        //         <span>Already have an account? </span>
-        //         <span className="loginText btn-dark text-white" onClick={() => redirectToLogin()}>Login here</span> 
-        //     </div>
-            
-        // </div>
-
         <section>
             <div className="container">
                 <div className="row">
@@ -113,18 +54,18 @@ function RegistrationForm(props) {
                             className="form-control" 
                             id="firstname" 
                             placeholder="First name" 
-                            value={state.firstname}
+                            value={firstname}
                             autoComplete="off"
-                            onChange={handleChange}
+                            onChange = {(event) => setFirstName(event.target.value)}
                        />
                         <label htmlFor="lastname" className ="label control-label">Last name</label>
                             <input type="lastname" 
                             className="form-control" 
                             id="lastname" 
                             placeholder="Last name" 
-                            value={state.lastname}
+                            value={lastname}
                             autoComplete="off"
-                            onChange={handleChange}
+                            onChange = {(event) => setLastName(event.target.value)}
                        />
 
                             <label htmlFor="email" className ="label control-label">Email address</label>
@@ -132,19 +73,19 @@ function RegistrationForm(props) {
                             className="form-control" 
                             id="email" 
                             placeholder="Enter email" 
-                            value={state.email}
+                            value={email}
                             autoComplete="off"
-                            onChange={handleChange}
+                            onChange = {(event) => setEmail(event.target.value)}
                        />
 
-                       <label  htmlFor="mobilenumber" className ="label control-label">Mobile number</label>
-                            <input type="mobilenumber" 
+                       <label  htmlFor="mobile" className ="label control-label">Mobile number</label>
+                            <input type="mobile" 
                             className="form-control" 
-                            id="mobilenumber"  
+                            id="mobile"  
                             placeholder="Mobile number" 
-                            value={state.mobilenumber}
+                            value={mobile}
                             autoComplete="off"
-                            onChange={handleChange}
+                            onChange = {(event) => setMobile(event.target.value)}
                        />
 
 
@@ -153,18 +94,18 @@ function RegistrationForm(props) {
                             className="form-control" 
                             id="password" 
                             placeholder="password" 
-                            value={state.password}
+                            value={password}
                             autoComplete="off"
-                            onChange={handleChange}
+                            onChange = {(event) => setPassword(event.target.value)}
                        />
                        <label className ="label control-label">Confirm Password</label>
-                            <input type="confirmPassword" 
+                            <input type="password" 
                             className="form-control" 
                             id="confirmPassword" 
                             placeholder="confirmPassword" 
-                            value={state.confirmPassword}
+                            value={confirmPassword}
                             autoComplete="off"
-                            onChange={handleChange}
+                            onChange = {(event) => setconfirmPassword(event.target.value)}
                        />
                       
                        <div className="row"> 
